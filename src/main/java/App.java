@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class App {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final WiseSayingController controller = new WiseSayingController();
+    private static final WiseSayingController controller = new WiseSayingController(scanner);
     private static final Set<String> VALID_COMMANDS = new HashSet<>();
     private static final String HEADER = "== 명언 앱 ==";
     private static final String PROMPT = "명령) ";
