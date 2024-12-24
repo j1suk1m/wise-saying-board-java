@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.List;
 
 public class WiseSayingService {
     private static WiseSayingRepository repository;
@@ -15,5 +16,15 @@ public class WiseSayingService {
         repository.updateLastId(currentId);
 
         return currentId;
+    }
+
+    public WiseSayingListDto list() throws IOException {
+        List<WiseSaying> wiseSayings = repository.findAll();
+
+        List<WiseSayingDto> wiseSayingDtos = wiseSayings.stream()
+                                                        .map(WiseSayingDto::new)
+                                                        .toList();
+
+        return new WiseSayingListDto(wiseSayingDtos);
     }
 }

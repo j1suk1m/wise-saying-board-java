@@ -1,4 +1,7 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class WiseSayingRepository {
     private static WiseSayingRepository instance;
@@ -31,6 +34,52 @@ public class WiseSayingRepository {
 
     public void updateLastId(Long id) throws IOException {
         write(lastIdFile, id.toString());
+    }
+
+    public List<WiseSaying> findAll() throws IOException {
+        Long lastId = findLastId();
+        List<WiseSaying> wiseSayings = new ArrayList<>();
+
+        for (Long currentId = lastId; currentId >= 1; currentId--) {
+            String filePath = DB_DIRECTORY_PATH + File.separator + currentId + ".json";
+            File file = new File(filePath);
+
+            if (file.exists()) {
+                WiseSaying wiseSaying = readJsonFromFile(file);
+
+                if (wiseSaying != null) {
+                    wiseSayings.add(wiseSaying);
+                }
+            }
+        }
+
+        return wiseSayings;
+    }
+
+    private WiseSaying readJsonFromFile(File file) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String json = reader.lines().collect(Collectors.joining());
+            return parseWiseSayingFromJson(json);
+        }
+    }
+
+    private WiseSaying parseWiseSayingFromJson(String json) {
+        try {
+            Long id = Long.parseLong(extractValue(json, "id"));
+            String content = extractValue(json, "content");
+            String author = extractValue(json, "author");
+            return new WiseSaying(id, content, author);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String extractValue(String json, String key) {
+        String searchKey = "\"" + key + "\": \"";
+        int start = json.indexOf(searchKey) + searchKey.length();
+        int end = json.indexOf("\"", start);
+
+        return json.substring(start, end);
     }
 
     private WiseSayingRepository() throws IOException {

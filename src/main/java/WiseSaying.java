@@ -9,6 +9,12 @@ public class WiseSaying {
         this.author = wiseSayingCreationDto.getAuthor();
     }
 
+    WiseSaying(Long id, String content, String author) {
+        this.id = id;
+        this.content = content;
+        this.author = author;
+    }
+
     public String toJson() {
         return "{\n" +
                 "  \"id\": \"" + id + "\",\n" +
@@ -19,5 +25,13 @@ public class WiseSaying {
 
     public Long getId() {
         return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getAuthor() {
+        return author;
     }
 }

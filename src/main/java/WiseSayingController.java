@@ -5,6 +5,7 @@ public class WiseSayingController {
     private final Scanner scanner;
     private static WiseSayingService service;
     private static final String[] PROMPTS = {"명언 : ", "작가 : "};
+    private static final String LIST_HEADER = "번호 / 작가 / 명언\n----------------------";
 
     static {
         try {
@@ -22,6 +23,10 @@ public class WiseSayingController {
         if (command.equals("등록")) {
             Long createdWiseSayingId = create();
             printSuccessMessage(createdWiseSayingId);
+        } else if (command.equals("목록")) {
+            System.out.println(LIST_HEADER);
+            WiseSayingListDto wiseSayingListDto = list();
+            printWiseSayingList(wiseSayingListDto);
         }
     }
 
@@ -53,5 +58,27 @@ public class WiseSayingController {
         }
 
         return id;
+    }
+
+    private WiseSayingListDto list() {
+        WiseSayingListDto wiseSayingListDto = null;
+        
+        try {
+            wiseSayingListDto = service.list();
+        } catch (IOException e) {
+            System.out.println(ErrorMessage.LIST_READ_FAILURE);
+        }
+        
+        return wiseSayingListDto;
+    }
+
+    private void printWiseSayingList(WiseSayingListDto wiseSayingListDto) {
+        for (WiseSayingDto wiseSayingDto : wiseSayingListDto.getWiseSayingDtos()) {
+            Long id = wiseSayingDto.getId();
+            String author = wiseSayingDto.getAuthor();
+            String content = wiseSayingDto.getContent();
+
+            System.out.printf("%d / %s / %s%n", id, author, content);
+        }
     }
 }
