@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class WiseSayingController {
     private final Scanner scanner;
     private static WiseSayingService service;
-    private static final String[] PROMPTS = {"명언 : ", "작가 : "};
+    private static final String[][] PROMPTS = {{"명언(기존) : ", "작가(기존) : "}, {"명언 : ", "작가 : "}};
     private static final String LIST_HEADER = "번호 / 작가 / 명언\n----------------------";
 
     static {
@@ -32,14 +32,18 @@ public class WiseSayingController {
             System.out.println(LIST_HEADER);
             WiseSayingListDto wiseSayingListDto = list();
             printWiseSayingList(wiseSayingListDto);
-        } else if (command.startsWith("삭제")) {
+        } else {
             Matcher matcher = pattern.matcher(command);
 
             if (matcher.find()) {
                 Long targetId = Long.parseLong(matcher.group(2));
 
-                if (delete(targetId)) {
-                    printSuccessMessage(targetId, matcher.group(1));
+                if (command.startsWith("삭제")) {
+                    if (delete(targetId)) {
+                        printSuccessMessage(targetId, matcher.group(1));
+                    }
+                } else if (command.startsWith("수정")) {
+                    update(targetId);
                 }
             }
         }
@@ -47,13 +51,12 @@ public class WiseSayingController {
 
     private String inputWiseSayingInfo(String prompt) {
         System.out.print(prompt);
-
         return scanner.nextLine();
     }
 
     private WiseSayingCreationDto getWiseSayingCreationDto() {
-        String content = inputWiseSayingInfo(PROMPTS[0]);
-        String author = inputWiseSayingInfo(PROMPTS[1]);
+        String content = inputWiseSayingInfo(PROMPTS[Status.NEW.getId()][0]);
+        String author = inputWiseSayingInfo(PROMPTS[Status.NEW.getId()][1]);
 
         return new WiseSayingCreationDto(content, author);
     }
@@ -112,5 +115,41 @@ public class WiseSayingController {
         }
 
         return false;
+    }
+
+    private WiseSayingDto read(Long targetId) {
+        WiseSayingDto wiseSayingDto = null;
+
+        try {
+            wiseSayingDto = service.findById(targetId);
+        } catch (NoSuchFileException e) {
+            printCommandFailureMessage(targetId);
+        }  catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return wiseSayingDto;
+    }
+
+    private void update(Long targetId) {
+        WiseSayingDto existingWiseSayingDto = read(targetId);
+
+        if (existingWiseSayingDto != null) {
+            System.out.print(PROMPTS[Status.OLD.getId()][0]);
+            System.out.println(existingWiseSayingDto.getContent());
+            String newContent = inputWiseSayingInfo(PROMPTS[Status.NEW.getId()][0]);
+
+            System.out.print(PROMPTS[Status.OLD.getId()][1]);
+            System.out.println(existingWiseSayingDto.getAuthor());
+            String newAuthor = inputWiseSayingInfo(PROMPTS[Status.NEW.getId()][1]);
+
+            WiseSayingDto newWiseSayingDto = new WiseSayingDto(targetId, newContent, newAuthor);
+
+            try {
+                service.update(newWiseSayingDto);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 }

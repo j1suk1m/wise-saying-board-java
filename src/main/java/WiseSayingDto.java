@@ -3,6 +3,12 @@ public class WiseSayingDto {
     private final String content;
     private final String author;
 
+    public WiseSayingDto(Long id, String content, String author) {
+        this.id = id;
+        this.content = content;
+        this.author = author;
+    }
+
     public WiseSayingDto(WiseSaying wiseSaying) {
         this.id = wiseSaying.getId();
         this.content = wiseSaying.getContent();
