@@ -56,6 +56,12 @@ public class WiseSayingRepository {
         return wiseSayings;
     }
 
+    public void deleteById(Long targetId) {
+        String filePath = DB_DIRECTORY_PATH + File.separator + targetId + ".json";
+        File file = new File(filePath);
+        file.delete();
+    }
+
     private WiseSaying readJsonFromFile(File file) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String json = reader.lines().collect(Collectors.joining());

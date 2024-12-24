@@ -12,7 +12,6 @@ public class App {
     static {
         VALID_COMMANDS.add("등록");
         VALID_COMMANDS.add("목록");
-        VALID_COMMANDS.add("삭제");
     }
 
     public void run() {
@@ -46,7 +45,7 @@ public class App {
     }
 
     private boolean isValidCommand(String command) {
-        return VALID_COMMANDS.contains(command) || command.matches("수정\\?id=\\d+");
+        return VALID_COMMANDS.contains(command) || command.matches("(수정|삭제)\\?id=\\d+");
     }
 
     private void close() {

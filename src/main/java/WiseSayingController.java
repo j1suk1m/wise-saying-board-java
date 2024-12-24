@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WiseSayingController {
     private final Scanner scanner;
@@ -20,13 +22,23 @@ public class WiseSayingController {
     }
 
     public void processCommand(String command) {
+        Pattern pattern = Pattern.compile("(수정|삭제)\\?id=(\\d+)");
+
         if (command.equals("등록")) {
             Long createdWiseSayingId = create();
-            printSuccessMessage(createdWiseSayingId);
+            printSuccessMessage(createdWiseSayingId, command);
         } else if (command.equals("목록")) {
             System.out.println(LIST_HEADER);
             WiseSayingListDto wiseSayingListDto = list();
             printWiseSayingList(wiseSayingListDto);
+        } else if (command.startsWith("삭제")) {
+            Matcher matcher = pattern.matcher(command);
+
+            if (matcher.find()) {
+                Long targetId = Long.parseLong(matcher.group(2));
+                delete(targetId);
+                printSuccessMessage(targetId, matcher.group(1));
+            }
         }
     }
 
@@ -43,8 +55,8 @@ public class WiseSayingController {
         return new WiseSayingCreationDto(content, author);
     }
 
-    private static void printSuccessMessage(Long createdWiseSayingId) {
-        System.out.println(createdWiseSayingId + "번 명언이 등록되었습니다.");
+    private static void printSuccessMessage(Long createdWiseSayingId, String commandType) {
+        System.out.println(createdWiseSayingId + "번 명언이 " + commandType + "되었습니다.");
     }
 
     private Long create() {
@@ -80,5 +92,9 @@ public class WiseSayingController {
 
             System.out.printf("%d / %s / %s%n", id, author, content);
         }
+    }
+
+    private void delete(Long targetId) {
+        service.delete(targetId);
     }
 }

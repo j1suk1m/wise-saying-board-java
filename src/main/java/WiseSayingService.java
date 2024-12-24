@@ -27,4 +27,8 @@ public class WiseSayingService {
 
         return new WiseSayingListDto(wiseSayingDtos);
     }
+
+    public void delete(Long targetId) {
+        repository.deleteById(targetId);
+    }
 }
