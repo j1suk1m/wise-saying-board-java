@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,10 +57,17 @@ public class WiseSayingRepository {
         return wiseSayings;
     }
 
-    public void deleteById(Long targetId) {
+    public void deleteById(Long targetId) throws IOException {
         String filePath = DB_DIRECTORY_PATH + File.separator + targetId + ".json";
         File file = new File(filePath);
-        file.delete();
+
+        if (!file.exists()) {
+            throw new NoSuchFileException(ErrorMessage.FILE_NOT_FOUND);
+        }
+
+        if (!file.delete()) {
+            throw new IOException(ErrorMessage.FILE_DELETION_FAILURE);
+        }
     }
 
     private WiseSaying readJsonFromFile(File file) throws IOException {

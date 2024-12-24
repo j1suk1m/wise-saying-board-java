@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 
 public class WiseSayingService {
@@ -28,7 +29,7 @@ public class WiseSayingService {
         return new WiseSayingListDto(wiseSayingDtos);
     }
 
-    public void delete(Long targetId) {
+    public void delete(Long targetId) throws IOException {
         repository.deleteById(targetId);
     }
 }

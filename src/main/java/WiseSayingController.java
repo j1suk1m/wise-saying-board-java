@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,8 +37,10 @@ public class WiseSayingController {
 
             if (matcher.find()) {
                 Long targetId = Long.parseLong(matcher.group(2));
-                delete(targetId);
-                printSuccessMessage(targetId, matcher.group(1));
+
+                if (delete(targetId)) {
+                    printSuccessMessage(targetId, matcher.group(1));
+                }
             }
         }
     }
@@ -57,6 +60,10 @@ public class WiseSayingController {
 
     private static void printSuccessMessage(Long createdWiseSayingId, String commandType) {
         System.out.println(createdWiseSayingId + "번 명언이 " + commandType + "되었습니다.");
+    }
+
+    private void printCommandFailureMessage(Long id) {
+        System.out.println(id + "번 명언은 존재하지 않습니다.");
     }
 
     private Long create() {
@@ -94,7 +101,16 @@ public class WiseSayingController {
         }
     }
 
-    private void delete(Long targetId) {
-        service.delete(targetId);
+    private boolean delete(Long targetId) {
+        try {
+            service.delete(targetId);
+            return true;
+        } catch (NoSuchFileException e) {
+            printCommandFailureMessage(targetId);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
     }
 }
