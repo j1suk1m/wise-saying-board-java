@@ -12,6 +12,7 @@ public class App {
     static {
         VALID_COMMANDS.add("등록");
         VALID_COMMANDS.add("목록");
+        VALID_COMMANDS.add("빌드");
     }
 
     public void run() {

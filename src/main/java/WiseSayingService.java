@@ -41,4 +41,8 @@ public class WiseSayingService {
         WiseSaying wiseSaying = new WiseSaying(wiseSayingDto);
         repository.save(wiseSaying);
     }
+
+    public void build() throws IOException {
+        repository.build();
+    }
 }

@@ -32,6 +32,8 @@ public class WiseSayingController {
             System.out.println(LIST_HEADER);
             WiseSayingListDto wiseSayingListDto = list();
             printWiseSayingList(wiseSayingListDto);
+        } else if (command.equals("빌드")) {
+            build();
         } else {
             Matcher matcher = pattern.matcher(command);
 
@@ -150,6 +152,15 @@ public class WiseSayingController {
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private void build() {
+        try {
+            service.build();
+            System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

@@ -21,12 +21,18 @@ public class WiseSaying {
         this.author = author;
     }
 
-    public String toJson() {
-        return "{\n" +
-                "  \"id\": \"" + id + "\",\n" +
-                "  \"content\": \"" + content + "\",\n" +
-                "  \"author\": \"" + author + "\"\n" +
-                "}";
+    public String toJson(boolean isIndented) {
+        String indent = "";
+
+        if (isIndented) {
+            indent = "  ";
+        }
+
+        return indent + "{\n" +
+                indent + "  \"id\": \"" + id + "\",\n" +
+                indent + "  \"content\": \"" + content + "\",\n" +
+                indent + "  \"author\": \"" + author + "\"\n" +
+                indent + "}";
     }
 
     public Long getId() {

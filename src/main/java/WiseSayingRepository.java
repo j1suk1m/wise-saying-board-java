@@ -31,7 +31,7 @@ public class WiseSayingRepository {
     }
 
     public void save(WiseSaying wiseSaying) throws IOException {
-        String jsonContent = wiseSaying.toJson();
+        String jsonContent = wiseSaying.toJson(false);
         String wiseSayingFilePath = DB_DIRECTORY_PATH + File.separator + wiseSaying.getId() + ".json";
 
         File wiseSayingFile = createFileIfAbsent(wiseSayingFilePath);
@@ -84,6 +84,26 @@ public class WiseSayingRepository {
         }
 
         return readJsonFromFile(file);
+    }
+
+    public void build() throws IOException {
+        StringBuffer stringBuffer = new StringBuffer("[\n");
+
+        String filePath = DB_DIRECTORY_PATH + File.separator + "data.json";
+        File file = createFileIfAbsent(filePath);
+
+        List<WiseSaying> wiseSayings = findAll().reversed();
+
+        wiseSayings.stream()
+                .map(wiseSaying -> wiseSaying.toJson(true))
+                .forEach(json -> stringBuffer.append(json).append(",\n"));
+
+        if (!wiseSayings.isEmpty()) {
+            stringBuffer.delete(stringBuffer.length() - 2, stringBuffer.length());
+        }
+
+        stringBuffer.append("\n]");
+        write(file, stringBuffer.toString());
     }
 
     private WiseSaying readJsonFromFile(File file) throws IOException {
