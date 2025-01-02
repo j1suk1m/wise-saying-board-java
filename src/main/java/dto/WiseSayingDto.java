@@ -1,3 +1,7 @@
+package dto;
+
+import domain.WiseSaying;
+
 public class WiseSayingDto {
     private final Long id;
     private final String content;

@@ -1,8 +1,15 @@
+package controller;
+
+import dto.WiseSayingCreationDto;
+import dto.WiseSayingDto;
+import dto.WiseSayingListDto;
+import exception.ErrorMessage;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import service.WiseSayingService;
 
 public class WiseSayingController {
     private final Scanner scanner;

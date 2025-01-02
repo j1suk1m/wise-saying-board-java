@@ -1,5 +1,12 @@
+package service;
+
+import domain.WiseSaying;
+import dto.WiseSayingCreationDto;
+import dto.WiseSayingDto;
+import dto.WiseSayingListDto;
 import java.io.IOException;
 import java.util.List;
+import repository.WiseSayingRepository;
 
 public class WiseSayingService {
     private static WiseSayingRepository repository;

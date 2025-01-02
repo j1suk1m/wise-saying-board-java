@@ -1,8 +1,12 @@
+package dto;
+
+import exception.ErrorMessage;
+
 public class WiseSayingCreationDto {
     private final String content;
     private final String author;
 
-    WiseSayingCreationDto(String content, String author) {
+    public WiseSayingCreationDto(String content, String author) {
         validate(content, author);
         this.content = content;
         this.author = author;

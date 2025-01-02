@@ -1,21 +1,26 @@
+package domain;
+
+import dto.WiseSayingCreationDto;
+import dto.WiseSayingDto;
+
 public class WiseSaying {
     private final Long id;
     private final String content;
     private final String author;
 
-    WiseSaying(WiseSayingDto wiseSayingDto) {
+    public WiseSaying(WiseSayingDto wiseSayingDto) {
         this.id = wiseSayingDto.getId();
         this.content = wiseSayingDto.getContent();
         this.author = wiseSayingDto.getAuthor();
     }
 
-    WiseSaying(Long id, WiseSayingCreationDto wiseSayingCreationDto) {
+    public WiseSaying(Long id, WiseSayingCreationDto wiseSayingCreationDto) {
         this.id = id;
         this.content = wiseSayingCreationDto.getContent();
         this.author = wiseSayingCreationDto.getAuthor();
     }
 
-    WiseSaying(Long id, String content, String author) {
+    public WiseSaying(Long id, String content, String author) {
         this.id = id;
         this.content = content;
         this.author = author;

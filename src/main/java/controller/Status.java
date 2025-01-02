@@ -1,3 +1,5 @@
+package controller;
+
 public enum Status {
     OLD(0),
     NEW(1);
